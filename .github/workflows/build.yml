@@ -11,14 +11,15 @@ jobs:
           - { os: macos-latest,   rid: osx-arm64 }
           - { os: windows-latest, rid: win-x64 }
     runs-on: ${{ matrix.os }}
-       steps:
+    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
       - name: Publish
-      run: dotnet publish FocusMonitor.csproj -c Release -r ${{ matrix.rid }} --self-contained -o out
+        run: dotnet publish FocusMonitor.csproj -c Release -r ${{ matrix.rid }} --self-contained -o out
+
       - name: Self-test (Linux, virtual display)
         if: runner.os == 'Linux'
         run: |
