@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FocusMonitor.MainWindow"
+        Title="Focus Monitor" Width="600" Height="620" MinWidth="520" MinHeight="560"
+        Background="#1e1e1e">
+  <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" Margin="14,10,14,12">
+
+    <TextBlock Grid.Row="0" Text="Focus Monitor" FontSize="22" FontWeight="Bold" Margin="0,0,0,8"/>
+
+    <Border Grid.Row="1" Background="#2a2a2a" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+      <StackPanel Spacing="2">
+        <TextBlock Text="Current Activity" FontWeight="Bold" Opacity="0.7"/>
+        <TextBlock x:Name="AppLabel" Text="—" FontSize="18" FontWeight="Bold"/>
+        <TextBlock x:Name="TitleLabel" Foreground="#bdbdbd" TextWrapping="Wrap"/>
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock x:Name="CategoryLabel" FontWeight="Bold"/>
+          <TextBlock x:Name="SessionLabel" Grid.Column="1" Foreground="#bdbdbd"/>
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <Border Grid.Row="2" Background="#2a2a2a" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+      <StackPanel Spacing="4">
+        <TextBlock Text="Today's Summary" FontWeight="Bold" Opacity="0.7"/>
+        <Grid ColumnDefinitions="*,Auto"><TextBlock Text="● Productive" Foreground="#2e7d32"/><TextBlock x:Name="ProductiveValue" Grid.Column="1"/></Grid>
+        <Grid ColumnDefinitions="*,Auto"><TextBlock Text="● Distracting" Foreground="#c62828"/><TextBlock x:Name="DistractingValue" Grid.Column="1"/></Grid>
+        <Grid ColumnDefinitions="*,Auto"><TextBlock Text="● Neutral" Foreground="#9e9e9e"/><TextBlock x:Name="NeutralValue" Grid.Column="1"/></Grid>
+        <Grid ColumnDefinitions="*,Auto"><TextBlock Text="● Idle" Foreground="#9e9e9e"/><TextBlock x:Name="IdleValue" Grid.Column="1"/></Grid>
+      </StackPanel>
+    </Border>
+
+    <TabControl Grid.Row="3">
+      <TabItem Header="Most Used Apps">
+        <DataGrid x:Name="AppsGrid" IsReadOnly="True" AutoGenerateColumns="False" Background="#2a2a2a">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Application" Binding="{Binding App}" Width="*"/>
+            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="120"/>
+            <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="110"/>
+          </DataGrid.Columns>
+        </DataGrid>
+      </TabItem>
+      <TabItem Header="Distraction Timeline">
+        <DataGrid x:Name="TimelineGrid" IsReadOnly="True" AutoGenerateColumns="False" Background="#2a2a2a">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="When" Binding="{Binding When}" Width="80"/>
+            <DataGridTextColumn Header="App" Binding="{Binding App}" Width="110"/>
+            <DataGridTextColumn Header="Window / Site" Binding="{Binding Window}" Width="*"/>
+            <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="130"/>
+          </DataGrid.Columns>
+        </DataGrid>
+      </TabItem>
+    </TabControl>
+
+    <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8" Margin="0,10,0,0">
+      <Button Content="Edit Categories" Click="EditCategories_Click"/>
+      <Button Content="Open Data Folder" Click="OpenDataFolder_Click"/>
+      <Button Content="Reset Today" Background="#5c1a1a" Click="ResetToday_Click"/>
+    </StackPanel>
+  </Grid>
+</Window>
