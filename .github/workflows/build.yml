@@ -24,9 +24,19 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb xdotool xprintidle openbox x11-apps
+          sudo apt-get install -y xvfb xdotool xprintidle openbox xterm x11-utils
           chmod +x out/FocusMonitor
-          xvfb-run -a bash -c 'openbox & sleep 2; xclock & sleep 2; xdotool search --sync --class xclock windowactivate; sleep 1; xdotool getactivewindow getwindowname || true; ./out/FocusMonitor --selftest'
+          xvfb-run -a -s "-screen 0 1280x800x24" bash -c '
+            openbox & sleep 2
+            xterm -T selftest-window & sleep 2
+            WID=$(xdotool search --sync --onlyvisible --class xterm | head -1)
+            xdotool windowactivate --sync $WID || true
+            xdotool windowfocus --sync $WID || true
+            sleep 1
+            xprop -root _NET_ACTIVE_WINDOW
+            xprop -id $WID _NET_WM_PID _NET_WM_NAME WM_CLASS
+            ./out/FocusMonitor --selftest
+          '
 
       - name: Self-test (macOS, best effort)
         if: runner.os == 'macOS'
@@ -39,4 +49,3 @@ jobs:
         with:
           name: FocusMonitor-${{ matrix.rid }}
           path: out
-          
