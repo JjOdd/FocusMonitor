@@ -11,21 +11,22 @@ jobs:
           - { os: macos-latest,   rid: osx-arm64 }
           - { os: windows-latest, rid: win-x64 }
     runs-on: ${{ matrix.os }}
-       steps:
+    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
       - name: Publish
-      run: dotnet publish FocusMonitor.csproj -c Release -r ${{ matrix.rid }} --self-contained -o out
+        run: dotnet publish FocusMonitor.csproj -c Release -r ${{ matrix.rid }} --self-contained -o out
+
       - name: Self-test (Linux, virtual display)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb xdotool xprintidle openbox x11-apps
           chmod +x out/FocusMonitor
-              xvfb-run -a bash -c 'openbox & sleep 2; xclock & sleep 2; xdotool search --sync --class xclock windowactivate; sleep 1; xdotool getactivewindow getwindowname || true; ./out/FocusMonitor --selftest'
+          xvfb-run -a bash -c 'openbox & sleep 2; xclock & sleep 2; xdotool search --sync --class xclock windowactivate; sleep 1; xdotool getactivewindow getwindowname || true; ./out/FocusMonitor --selftest'
 
       - name: Self-test (macOS, best effort)
         if: runner.os == 'macOS'
@@ -38,3 +39,4 @@ jobs:
         with:
           name: FocusMonitor-${{ matrix.rid }}
           path: out
+          
